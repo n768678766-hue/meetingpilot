@@ -41,6 +41,10 @@ def extract_meeting(client: Any, model: str, transcript: str) -> MeetingResult:
             temperature=0.1,
         )
     except Exception as exc:
+        if isinstance(exc, UnicodeEncodeError):
+            raise ExtractionError(
+                "API Key 看起来不是有效密钥。请删除占位符，或在 Streamlit Secrets 中填写真实的 ASCII API Key。"
+            ) from exc
         if OpenAIError is not None and isinstance(exc, OpenAIError):
             raise ExtractionError(
                 "模型接口连接失败。请确认网络权限、代理设置、Base URL、模型名和 API Key；"

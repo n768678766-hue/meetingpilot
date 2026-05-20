@@ -1,0 +1,12 @@
+{
+  "name": "meetingpilot",
+  "version": "0.1.0",
+  "private": true,
+  "description": "AI meeting notes and action item extraction assistant.",
+  "scripts": {
+    "app": "streamlit run src/meetingpilot/app.py",
+    "lint": "ruff check src",
+    "format": "ruff format src"
+  }
+}
+

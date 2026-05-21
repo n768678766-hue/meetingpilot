@@ -1,10 +1,26 @@
 """Local storage helpers for outputs and bad-case logs."""
 
 import json
+import re
 from datetime import datetime
 from pathlib import Path
 
 from meetingpilot.models import BadCase, MeetingResult
+
+
+def safe_filename_part(value: str, fallback: str = "meeting") -> str:
+    """Create a filesystem-safe filename component preserving Chinese characters.
+
+    Replaces Windows-forbidden filename characters and whitespace while
+    keeping CJK characters intact. Returns *fallback* if the result is empty.
+    """
+    cleaned = re.sub(r'[<>:"/\\|?*]', "-", value)
+    cleaned = re.sub(r"\s+", "-", cleaned)
+    cleaned = re.sub(r"-+", "-", cleaned)
+    cleaned = cleaned.strip("-. ")
+    if len(cleaned) > 80:
+        cleaned = cleaned[:80].rstrip("-")
+    return cleaned or fallback
 
 
 def _ensure_dir(path: Path) -> None:
@@ -17,7 +33,7 @@ def save_meeting_result(result: MeetingResult, data_dir: Path) -> Path:
     _ensure_dir(out_dir)
 
     timestamp = datetime.now().strftime("%Y%m%dT%H%M%S")
-    slug = result.title.lower().replace(" ", "-")[:40]
+    slug = safe_filename_part(result.title)[:40]
     filename = f"{timestamp}_{slug}.json"
     filepath = out_dir / filename
 

@@ -4,7 +4,7 @@ The MVP can keep state local and simple.
 
 Streamlit session state should hold:
 
-- Current transcript input.
+- Current transcript input (from paste text area or uploaded transcript file `.txt` / `.md` / `.srt` / `.vtt`).
 - Latest structured meeting result.
 - Export preview.
 - Bad-case draft.

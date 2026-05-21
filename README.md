@@ -1,11 +1,11 @@
 # MeetingPilot
 
-MeetingPilot 是一个轻量级 AI 会议纪要与待办抽取助手。
+MeetingPilot 是一个轻量级的会后文本结构化工具（post-transcription meeting text structuring tool），不是音频转录产品。
 
-它把会议转写文本转换为结构化纪要、决策事项、待办任务、风险点、不确定项，并支持导出 Markdown / CSV。
+它接收已有的会议转写文本，自动生成结构化纪要、决策事项、待办任务、风险点、不确定项，并支持导出 Markdown / CSV。
 
 ## MVP Goals
-- Paste meeting transcript text.
+- Paste meeting transcript text or upload transcript files (.txt, .md, .srt, .vtt).
 - Generate structured meeting notes.
 - Extract action items with task, owner, due date, and priority.
 - Flag unclear or missing information.

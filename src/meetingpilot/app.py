@@ -112,6 +112,38 @@ def _refresh_config() -> None:
         st.info("当前 .env 中没有 API Key，将继续使用本地演示模式。")
 
 
+def _estimate_tokens(text: str) -> int:
+    """Rough token estimate for mixed Chinese/English text."""
+    cn = sum(1 for c in text if "一" <= c <= "鿿")
+    other = len(text) - cn
+    return int(cn * 1.5 + other * 0.3)
+
+
+def _transcript_size_feedback(text: str) -> tuple[int, int, str, str]:
+    """Return (char_count, token_estimate, status_message, severity)."""
+    char_count = len(text)
+    token_est = _estimate_tokens(text)
+
+    if char_count == 0:
+        return char_count, token_est, "", ""
+    elif char_count <= 3000:
+        return char_count, token_est, "文本长度适中，适合直接处理。", "info"
+    elif char_count <= 10000:
+        return (
+            char_count,
+            token_est,
+            "文本较长，费用与延迟可能增加；建议删除无关闲聊或噪音后再处理。",
+            "warning",
+        )
+    else:
+        return (
+            char_count,
+            token_est,
+            "文本很长，建议按主题或时间段切分后再逐段处理。",
+            "warning",
+        )
+
+
 def _run_extraction() -> None:
     transcript = st.session_state.transcript.strip()
     if not transcript:
@@ -240,6 +272,16 @@ with col2:
         use_container_width=True,
         type="primary",
     )
+
+# -- Transcript size feedback
+char_count, token_est, size_msg, size_level = _transcript_size_feedback(
+    st.session_state.transcript
+)
+if size_msg:
+    if size_level == "info":
+        st.info(f"字符数：{char_count}  ·  估算 Token 数：约 {token_est}（仅供参考）\n\n{size_msg}")
+    else:
+        st.warning(f"字符数：{char_count}  ·  估算 Token 数：约 {token_est}（仅供参考）\n\n{size_msg}")
 
 # -- Results section
 result = st.session_state.result

@@ -11,6 +11,7 @@ MeetingPilot 是一个轻量级的会后文本结构化工具（post-transcripti
 - Flag unclear or missing information.
 - Export Markdown and CSV.
 - Record bad cases for prompt and workflow improvement.
+- Transcript length feedback with rough token estimates and cost/latency hints.
 
 ## Recommended Stack
 - Python 3.11+
